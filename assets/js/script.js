@@ -1,119 +1,122 @@
-// Assignment Code
+// variable is now connected to the button in HTML
 var generateBtn = document.querySelector("#generate");
 
-// my variables
-var upCase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'X', 'Z']
-var lowCase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-var specChar = ['!', '@', '#', '$', '%', '^', '&', '*', '_', ':', '?', '>', '<', '.', '/','-']
-var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-var ranChar = {
-  upCase: ranUpCase,
-  lowCase: ranLowCase,
-  specChar: ranSpecChar,
-  numbers: ranNumbers
-};
-
-// functions to get random letters, special characters, and numbers
-function ranUpCase() {
-  // Math.random chooses a random number, Math.floor rounds down to a whole number
-  return upCase[Math.floor(Math.random() * upCase.length)];
-}
-function ranLowCase() {
-  return lowCase[Math.floor(Math.random() * lowCase.length)];
-}
-function ranSpecChar() {
-  return specChar[Math.floor(Math.random() * specChar.length)];
-}
-function ranNumbers() {
-  return numbers[Math.floor(Math.random() * numbers.length)];
-}
-                          // // randomize elements of an array
-                          // function ranArray(arr) {
-                          //   return arr[Math.floor(Math.random() * arr.length)]
-                          //   }
+// global variables
+var upCase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'X', 'Z'];
+var lowCase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+var specChar = ['!', '@', '#', '$', '%', '^', '&', '*', '_', ':', '?', '>', '<', '.', '/', '-'];
+var numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 
-// Write password to the #password input
-function writePassword() {
-  var password = generatePassword();
-  var passwordText = document.querySelector("#password");
 
-  passwordText.value = password;
-  
-  // save the input value
-  var passLength = prompt("How many characters should the password be?");
-  //to check
-  console.log(passLength);
+function generatePassword() {
 
-  // if the user cancels the prompt, alert
-  if (passLength === null || passLength === "") {
-    alert("If you don't want to generate a password, \nwhy are you here???");
+  // store possible characters as the user selects criteria
+  var possibleChar = [];
+  // store at least one of each criteria the user selects
+  var guaranteedChar = [];
+  // store the generated password
+  var newPassword = "";
+  // to subtract the length of the guaranteed characters already in the array before adding more to complete the password length
+  var charTypes = 0;
+
+  // user chooses which criterias to include and add to possible characters if true
+  function passCriteria() {
+    var hasLowCase = confirm("Should it include lower case letters?");
+    if (hasLowCase) {
+      //if true, add lower case array to possible characters array
+      possibleChar = possibleChar.concat(lowCase);
+      // to check
+      console.log("Lower case: " + hasLowCase);
+      // add a random lower case to the guaranteed characters array
+      guaranteedChar.push(lowCase[Math.floor(Math.random() * lowCase.length)]);
+      // to check
+      console.log(guaranteedChar);
+      // increase the number in character types by one because there is another character in the guaranteed characters array
+      charTypes++;
+      // to check
+      console.log(charTypes);
+    }
+    var hasUpCase = confirm("How about some upper case letters?");
+    if (hasUpCase) {
+      possibleChar = possibleChar.concat(upCase);
+      console.log("Upper case: " + hasUpCase);
+      guaranteedChar.push(upCase[Math.floor(Math.random() * upCase.length)]);
+      console.log(guaranteedChar);
+      charTypes++;
+      console.log(charTypes);
+    }
+    var hasSpecChar = confirm("And maybe some special characters?");
+    if (hasSpecChar) {
+      possibleChar = possibleChar.concat(specChar);
+      console.log("Special characters: " + hasSpecChar);
+      guaranteedChar.push(specChar[Math.floor(Math.random() * specChar.length)]);
+      console.log(guaranteedChar);
+      charTypes++;
+      console.log(charTypes);
+    }
+    var hasNum = confirm("What's missing? \nNumbers! \nYou want some numbers in there?");
+    if (hasNum) {
+      possibleChar = possibleChar.concat(numbers);
+      console.log("Numbers: " + hasNum);
+      guaranteedChar.push(numbers[Math.floor(Math.random() * numbers.length)]);
+      console.log(guaranteedChar);
+      charTypes++;
+      console.log(charTypes);
+    }
+    // passCriteria() = possibleChar
+    return possibleChar;
   }
-  // if the number is less than 8 or greater than 128, alert and reset
-  else if ((passLength <8) || (passLength >128)) {
-    alert("Please type in a number between 8 and 128.");
+
+  passCriteria();
+
+  // if user doesn't choose at least one criteria, restart
+  if (possibleChar.length < 1) {
+    alert("You can't have a password with nothing in it... \nTry again, but this time, say 'ok' to at least one of them please.");
     writePassword();
   }
-  // if number is between 8-128, check other cases
-  else if ((passLength > 8) && (passLength < 128)) {
-    //to check
-    console.log(passLength);
-
-    //user chooses which criterias to include
-    var hasLowCase = confirm('Should it include lower case letters?');
-    var hasUpCase = confirm('Should it include upper case letters?');
-    var hasSpecChar = confirm('Should it like to include special characters?');
-    var hasNum = confirm('Should it like to include numbers.');
-
-    // if user doesn't choose at least one criteria, restart
-    if (
-      hasLowCase === false &&
-      hasUpCase === false &&
-      hasSpecChar === false &&
-      hasNum === false ) {
-      alert('Must choose one character type');
+  else {
+    var passLength = prompt("How long should your password be? Please write a numbers.")
+    // if the user cancels the prompt, alert
+    if (passLength === null || passLength === "") {
+      alert("If you don't want to generate a password, \nwhy are you here???");
+      writePassword()
+    }
+    // if the number is less than 8 or greater than 128, alert and reset
+    else if ((passLength < 8) || (passLength > 128)) {
+      alert("Please type in a number between 8 and 128.");
       writePassword();
     }
-    else
-      //store user inputs and check with console.log
-      var passOptions = {
-        length: passLength,
-        hasLowCase: hasLowCase,
-        hasUpCase: hasUpCase,
-        hasSpecChar: hasSpecChar,
-        hasNum: hasNum
-      };
-      console.log(passOptions);
+    // if number is between 8-128, generate password
+    else if ((passLength >= 8) && (passLength <= 128)) {
+      console.log(passLength);
 
-      //generate the password
-      function generatePassword() {
-
-
+      //randomize and make a password
+      for (var i = 0; i < (passLength - charTypes); i++) {
+        guaranteedChar.push(possibleChar[Math.floor(Math.random() * possibleChar.length)])
       }
+      // guaranteedChar is an array, combine them into one string
+      newPassword = guaranteedChar.join("");
 
-// Variable to store the password as its being created we will be PUSHING the results as they are happening here
-var result = [];
-
-// Create an array to store the types of characters to inclue in the password
-var possibleChar = [upcase, lowcase, specChar, numbers];
-
-// create an array to store guaranted characters
-var guarantedChar = [passOptions];
-
-
-
-
+      // generatePassword() = newPassword
+      return newPassword;
+    }
+    // if the user doesnt type a number, alert and reset
+    else {
+      alert("Please insert a number.")
+      writePassword()
+    }
   }
-  
-  // if the user doesnt type a number, alert and reset
-  else {
-    alert("Please insert a number.")
-    writePassword()
-  }
+
 }
 
-
+// this function is called when button is clicked
+function writePassword() {
+  var password = generatePassword();
+  // variable is now connected to the text area in HTML
+  var passwordText = document.querySelector("#password");
+  passwordText.value = password;
+}
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
