@@ -73,19 +73,19 @@ function generatePassword() {
   // if user doesn't choose at least one criteria, restart
   if (possibleChar.length < 1) {
     alert("You can't have a password with nothing in it... \nTry again, but this time, say 'ok' to at least one of them please.");
-    writePassword();
+    return null;
   }
   else {
     var passLength = prompt("How long should your password be? Please write a numbers.")
     // if the user cancels the prompt, alert
     if (passLength === null || passLength === "") {
       alert("If you don't want to generate a password, \nwhy are you here???");
-      writePassword()
+     return null;
     }
     // if the number is less than 8 or greater than 128, alert and reset
     else if ((passLength < 8) || (passLength > 128)) {
       alert("Please type in a number between 8 and 128.");
-      writePassword();
+     return null;
     }
     // if number is between 8-128, generate password
     else if ((passLength >= 8) && (passLength <= 128)) {
@@ -93,18 +93,32 @@ function generatePassword() {
 
       //randomize and make a password
       for (var i = 0; i < (passLength - charTypes); i++) {
-        guaranteedChar.push(possibleChar[Math.floor(Math.random() * possibleChar.length)])
+        guaranteedChar.push(possibleChar[Math.floor(Math.random() * possibleChar.length)]);
       }
+
+      //to shuffle the variables in guaranteedChar
+      function shuffleArray(guaranteedChar) {
+        var current = guaranteedChar.length;
+        while (0 !== current) {
+          var random = Math.floor(Math.random() * current);
+          current -= 1;
+          var temp = guaranteedChar[current];
+          guaranteedChar[current] = guaranteedChar[random];
+          guaranteedChar[random] = temp;
+        };
+        return guaranteedChar;
+      };
+
       // guaranteedChar is an array, combine them into one string
-      newPassword = guaranteedChar.join("");
+      newPassword = shuffleArray(guaranteedChar).join("");
 
       // generatePassword() = newPassword
       return newPassword;
     }
     // if the user doesnt type a number, alert and reset
     else {
-      alert("Please insert a number.")
-      writePassword()
+      alert("Please insert a number.");
+      return null;
     }
   }
 
